@@ -1,4 +1,3 @@
-// src/components/Starfield.jsx
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
@@ -86,6 +85,7 @@ const Starfield = () => {
         camera.updateProjectionMatrix();
 
         // Update positions and scale on resize
+        const newScale = calculateScale(window.innerWidth, window.innerHeight);
         profileSprite.scale.set(newScale.width, newScale.height, 1);
         profileSprite.position.set(-window.innerWidth / 4, 0, -500); 
         textMesh.position.set(window.innerWidth / 3, window.innerHeight / 3, -500); 
@@ -110,7 +110,9 @@ const Starfield = () => {
     // Clean up on component unmount
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
-      currentMount.removeChild(renderer.domElement);
+      if (currentMount) {
+        currentMount.removeChild(renderer.domElement);
+      }
     };
   }, []);
 
