@@ -1,8 +1,8 @@
 import React, { useRef, useEffect } from 'react';
 import * as THREE from 'three';
-import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
-import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
-import profilePicture from '../assets/profilePicture.jpg'; 
+import { FontLoader } from 'three/examples/jsm/loaders/FontLoader.js';
+import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry.js';
+import profilePicture from '../assets/profilePicture.jpg';
 
 const Starfield = () => {
   const mountRef = useRef(null);
@@ -85,7 +85,6 @@ const Starfield = () => {
         camera.updateProjectionMatrix();
 
         // Update positions and scale on resize
-        const newScale = calculateScale(window.innerWidth, window.innerHeight);
         profileSprite.scale.set(newScale.width, newScale.height, 1);
         profileSprite.position.set(-window.innerWidth / 4, 0, -500); 
         textMesh.position.set(window.innerWidth / 3, window.innerHeight / 3, -500); 
