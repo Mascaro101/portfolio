@@ -1,6 +1,6 @@
 // src/components/Starfield.jsx
 import React, { useRef, useEffect } from 'react';
-import * as THREE from 'three';
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.165.0/build/three.module.js';
 import { FontLoader } from 'three/examples/jsm/loaders/FontLoader';
 import { TextGeometry } from 'three/examples/jsm/geometries/TextGeometry';
 import profilePicture from '../assets/profilePicture.jpg'; 
