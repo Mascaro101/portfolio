@@ -47,7 +47,7 @@ const Starfield = () => {
     const profileSprite = new THREE.Sprite(profileMaterial);
     const initialScale = calculateScale(window.innerWidth, window.innerHeight);
     profileSprite.scale.set(initialScale.width, initialScale.height, 1);
-    profileSprite.position.set(-window.innerWidth / 4, 0, -500); 
+    profileSprite.position.set(-window.innerWidth / 4, 0, -500);
     scene.add(profileSprite);
 
     // Create Name Text
@@ -60,7 +60,7 @@ const Starfield = () => {
       });
       const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-      textMesh.position.set(window.innerWidth / 5, window.innerHeight / 4, -500); 
+      textMesh.position.set(window.innerWidth / 5, window.innerHeight / 4, -500);
       scene.add(textMesh);
 
       // Animation loop with text facing the camera
@@ -84,17 +84,28 @@ const Starfield = () => {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
 
-        // Update positions and scale on resize
+        const newScale = calculateScale(window.innerWidth, window.innerHeight);
         profileSprite.scale.set(newScale.width, newScale.height, 1);
-        profileSprite.position.set(-window.innerWidth / 4, 0, -500); 
-        textMesh.position.set(window.innerWidth / 3, window.innerHeight / 3, -500); 
+        profileSprite.position.set(-window.innerWidth / 4, 0, -500);
+        textMesh.position.set(window.innerWidth / 5, window.innerHeight / 4, -500);
       };
 
       window.addEventListener('resize', handleResize);
 
+      // Handle scroll to zoom
+      const handleWheel = (event) => {
+        camera.position.z += event.deltaY * 0.5; 
+        //Clamp camera position
+        camera.position.z = THREE.MathUtils.clamp(camera.position.z, -500, 500);
+        camera.updateProjectionMatrix();
+      };
+
+      window.addEventListener('wheel', handleWheel);
+
       // Clean up on component unmount
       return () => {
         window.removeEventListener('resize', handleResize);
+        window.removeEventListener('wheel', handleWheel);
       };
     });
 
@@ -109,15 +120,17 @@ const Starfield = () => {
     // Clean up on component unmount
     return () => {
       window.removeEventListener('mousemove', onMouseMove);
-      currentMount.removeChild(renderer.domElement);
+      if (currentMount) {
+        currentMount.removeChild(renderer.domElement);
+      }
     };
   }, []);
 
   const calculateScale = (width, height) => {
-    const scale = Math.min(width, height) / 2;
+    const scale = Math.min(width, height) / 10;
     return {
       width: scale,
-      height: scale * 1.3, 
+      height: scale * 1.3,
     };
   };
 
