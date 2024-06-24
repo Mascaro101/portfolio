@@ -40,12 +40,14 @@ const Starfield = () => {
     const stars = new THREE.Points(starGeometry, starMaterial);
     scene.add(stars);
 
-    // Load Profile Picture Texture
+    // Load Profile Picture Texture PROFILE PICTURE
     const textureLoader = new THREE.TextureLoader();
     const profileTexture = textureLoader.load(profilePicture);
     const profileMaterial = new THREE.SpriteMaterial({ map: profileTexture });
     const profileSprite = new THREE.Sprite(profileMaterial);
+
     const initialScale = calculateScale(window.innerWidth, window.innerHeight);
+
     profileSprite.scale.set(initialScale.width, initialScale.height, 1);
     profileSprite.position.set(-window.innerWidth / 4, 0, -500);
     scene.add(profileSprite);
@@ -60,8 +62,35 @@ const Starfield = () => {
       });
       const textMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
       const textMesh = new THREE.Mesh(textGeometry, textMaterial);
-      textMesh.position.set(window.innerWidth / 5, window.innerHeight / 4, -500);
+      textMesh.position.set(window.innerWidth / 15, window.innerHeight / 6, -300);
       scene.add(textMesh);
+
+      const descriptionLines = [
+        "I'm a passionate software developer with a love for building elegant",
+        "and efficient web applications. I've been tinkering with computers since",
+        "before I could spell my name. Over the years, I've honed my skills in",
+        "various programming languages and frameworks, allowing me to create",
+        "innovative solutions to complex problems. My journey began creating",
+        "simple Minecraft mods in Java and has since evolved to mastering C++,",
+        "C, Python, JavaScript, React, Node.js, and more. I thrive in collaborative",
+        "environments and enjoy the challenge of staying current with the latest",
+        "industry trends and technologies. Whether it's front-end design or back-end",
+        "logic, I am dedicated to delivering high-quality, user-centric applications."
+      ];
+
+      const textMeshes = descriptionLines.map((line, index) => {
+        const descTextGeometry = new TextGeometry(line, {
+          font: font,
+          size: 10,
+          height: 1,
+        });
+        const descTextMaterial = new THREE.MeshBasicMaterial({ color: 0xffffff });
+        const descTextMesh = new THREE.Mesh(descTextGeometry, descTextMaterial);
+        descTextMesh.position.set(window.innerWidth / 15, window.innerHeight / 6 - index * 24, -400
+        );
+        scene.add(descTextMesh);
+        return descTextMesh;
+      });
 
       // Animation loop with text facing the camera
       const animate = () => {
@@ -78,23 +107,28 @@ const Starfield = () => {
 
       animate();
 
-      // Handle window resize
+      // Handle window resize 
       const handleResize = () => {
         renderer.setSize(window.innerWidth, window.innerHeight);
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
 
         const newScale = calculateScale(window.innerWidth, window.innerHeight);
+        
         profileSprite.scale.set(newScale.width, newScale.height, 1);
         profileSprite.position.set(-window.innerWidth / 4, 0, -500);
         textMesh.position.set(window.innerWidth / 5, window.innerHeight / 4, -500);
+
+        textMeshes.forEach((descTextMesh, index) => {
+          descTextMesh.position.set(window.innerWidth / 4, window.innerHeight / 4 - index * 10, -500);
+        });
       };
 
       window.addEventListener('resize', handleResize);
 
       // Handle scroll to zoom
       const handleWheel = (event) => {
-        camera.position.z += event.deltaY * 0.5; 
+        camera.position.z += event.deltaY * 0.1; 
         //Clamp camera position
         camera.position.z = THREE.MathUtils.clamp(camera.position.z, -500, 500);
         camera.updateProjectionMatrix();
@@ -127,7 +161,7 @@ const Starfield = () => {
   }, []);
 
   const calculateScale = (width, height) => {
-    const scale = Math.min(width, height) / 10;
+    const scale = Math.min(width, height) / 2;
     return {
       width: scale,
       height: scale * 1.3,
